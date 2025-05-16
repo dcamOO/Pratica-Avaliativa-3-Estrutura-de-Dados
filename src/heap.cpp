@@ -28,6 +28,7 @@ int Heap::Remover(){
     int aux = data[tamanho-1];
     data[tamanho-1] = data[0];
     data[0] = aux;
+    std::cout << data[tamanho-1] << " ";
     this->tamanho--;
 
     if(tamanho == 0){
@@ -67,22 +68,32 @@ void Heap::HeapifyPorBaixo(int posicao){
         HeapifyPorBaixo((posicao - 1) / 2);
     }
 }
-void Heap::HeapifyPorCima(int posicao){
-    int e = GetSucessorEsq(posicao);
-    int d = GetSucessorDir(posicao);
-    int c = data[posicao];
+void Heap::HeapifyPorCima(int posicao) {
+    int esquerda = GetSucessorEsq(posicao);
+    int direita = GetSucessorDir(posicao);
 
-    if(e < c || d < c){ //sucessores são menores?
-        if(e <= d){ //qual sucessor é menor?
-            int aux = e;
-            e = c;
-            c = aux;
-            HeapifyPorCima(posicao*2+2);
-        }else if(d < e){
-            int aux = d;
-            d = c;
-            c = aux;
-            HeapifyPorCima(posicao*2+1);
-        }
+    //checa limites
+    if (esquerda >= tamanho && direita >= tamanho) {
+        return;
+    }
+
+    // determina qual filho é menor
+    int menor = posicao;
+
+    if (esquerda < tamanho && data[esquerda] < data[menor]) {
+        menor = esquerda;
+    }
+
+    if (direita < tamanho && data[direita] < data[menor]) {
+        menor = direita;
+    }
+
+    // se filho for menor, troca eles de lugar
+    if (menor != posicao) {
+        int aux = data[posicao];
+        data[posicao] = data[menor];
+        data[menor] = aux;
+
+        HeapifyPorCima(menor);
     }
 }
